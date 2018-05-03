@@ -34,9 +34,14 @@ aAmpEnv linseg 0, iat,  iamp, irel, 0
 
 aLFO     lfo 990, 5, 0 ;  itype
 
-a1, a2  diskin2 "../WAV/rhein2.wav", ifreq, iskiptime, 1
+a1, a2  diskin2 "../WAV/rhein3.wav", ifreq, iskiptime, 1
 
+i1 = birnd(1)
+if (i1 > 0) then
+outs a2*aAmpEnv, a1*aAmpEnv
+else
 outs a1*aAmpEnv, a2*aAmpEnv
+endif
 
 
 galeft    =         galeft  +  a1 * irevSend
@@ -53,8 +58,8 @@ endin
 // --------------------- init vars ---------------------------------------------
 $tailT   = 4;
 $startT  = 60*0;
-$endT    = 60*5-$tailT;
-$TT      = 60*60*4;
+$endT    = 60*4+52;
+$TT      = 60*60*1+15*60;
 $Events  = intval($TT*1);         // events  per second
 // --------------------------- sco head ----------------------------------------
 $scoreHeader =  '; Reverb

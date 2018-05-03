@@ -34,9 +34,16 @@ aAmpEnv linseg 0, iat,  iamp, irel, 0
 
 aLFO     lfo 990, 5, 0 ;  itype
 
-a1, a2  diskin2 "../WAV/rhein2.wav", ifreq, iskiptime, 1
+a1, a2  diskin2 "../WAV/thames2.wav", ifreq, iskiptime, 1
 
+i1 = birnd(1)
+if (i1 > 0) then
+outs a2*aAmpEnv, a1*aAmpEnv
+else
 outs a1*aAmpEnv, a2*aAmpEnv
+endif
+
+
 
 
 galeft    =         galeft  +  a1 * irevSend
@@ -53,7 +60,7 @@ endin
 // --------------------- init vars ---------------------------------------------
 $tailT   = 4;
 $startT  = 60*0;
-$endT    = 60*5-$tailT;
+$endT    = 60*3+42;
 $TT      = 60*60*4;
 $Events  = intval($TT*1);         // events  per second
 // --------------------------- sco head ----------------------------------------
@@ -66,11 +73,13 @@ i99     0   '.($TT+$tailT).'
 
 
 // --------------------------- main p1-px fields -------------------------------
+// start time
 function p2() {
 Global $TT;
 return round(stats_rand_gen_funiform(1,$TT),1);
 }
 
+// duration
 $TDur = 1;
 function idur() {
 Global $TDur;
@@ -81,6 +90,7 @@ $TDur = round(stats_rand_gen_funiform(0.1,60),1);
 return $TDur;
 }
 
+// amplitude
 function iamp() {
 return stats_rand_gen_iuniform(-36,6);
 // return -1;
@@ -88,9 +98,9 @@ return stats_rand_gen_iuniform(-36,6);
 
 function ifreq() {
 
-if(rand(0,1)) { return 1; } else { return -1; } 
+// if(rand(0,1)) { return 1; } else { return -1; } 
 
-//return round(stats_rand_gen_funiform(.5,1.5),3); 
+return round(stats_rand_gen_funiform(.5,1.5),3); 
 
 // return 1;
 }
