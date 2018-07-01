@@ -11,7 +11,7 @@ garight init 0
 
 instr 1
 idur            = p3
-iamp            = ampdb(p4)
+iamp            = ampdb(p4)*1.3
 ifreq           = p5   ;  1x - negative backwards 
 iat             = p6
 irel            = p7

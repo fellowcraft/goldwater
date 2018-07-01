@@ -61,7 +61,8 @@ endin
 $tailT   = 4;
 $startT  = 60*0;
 $endT    = 60*3+42;
-$TT      = 60*60*1+55*60;
+// $TT      = 60*60*1+55*60;
+$TT      = 60*60*1;
 $Events  = intval($TT*1);         // events  per second
 // --------------------------- sco head ----------------------------------------
 $scoreHeader =  '; Reverb
