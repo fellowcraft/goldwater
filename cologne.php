@@ -27,57 +27,55 @@ irel            = p7
 ipanStart       = p8
 ipanEnd         = p9
 iskiptime       = p10
-irevSend        = p11/8
+irevSend        = p11/100
 
 kpan    linseg  ipanStart, idur, ipanEnd
-aAmpEnv linseg  0, iat,  iamp, irel, 0
+aAmpEnv linseg 0, iat,  iamp, irel, 0
 
 aLFO     lfo 990, 5, 0 ;  itype
 
-aIn  diskin2 "../WAV/storm3.wav", ifreq, iskiptime, 1
+a1, a2  diskin2 "../WAV/rhein3.wav", ifreq, iskiptime, 1
 
-aLeft  = aIn * kpan       * aAmpEnv
-aRight = aIn * (1 - kpan) * aAmpEnv 
+i1 = birnd(1)
+if (i1 > 0) then
+outs a2*aAmpEnv, a1*aAmpEnv
+else
+outs a1*aAmpEnv, a2*aAmpEnv
+endif
 
-outs aLeft, aRight 
 
-galeft    =         galeft  +  aIn * kpan       * irevSend
-garight   =         garight +  aIn * (1 - kpan) * irevSend
+galeft    =         galeft  +  a1 * irevSend
+garight   =         garight +  a2 * irevSend
 endin
 
 instr 99                           ; global reverb ----------------------------
-irvbtime    =        p4
-aleft,  aright  reverbsc  galeft,  garight, irvbtime, 18000, sr, 0.8, 1 
-aright, aleft   reverbsc  garight, galeft,  irvbtime, 18000, sr, 0.8, 1 
-outs   aright,   aleft              
+a1,  a2  reverbsc  galeft,  garight, 0.9, 18000, sr, 0.8, 1 
+outs   a1, a2              
 galeft    =    0
 garight   =    0 
 endin
+';
+// --------------------- init vars ---------------------------------------------
+$tailT   = 4;
+$startT  = 60*0;
+$endT    = 60*4+52;
+$TT      = 60*60*1-$tailT;
+$Events  = intval($TT*0.5);         // events  per second
+// --------------------------- sco head ----------------------------------------
+$scoreHeader =  '; Reverb
+i99     0   '.($TT+$tailT).'   
+
 '
 ;
 
 
-// --------------------- init vars ---------------------------------------------
-$tailT   = 30;
-$startT  = 60*0;
-$endT    = 60*5+03;
-$TT      = 60*60*1-$tailT;
-$Events  = intval($TT*1);         // events  per second
-// --------------------------- sco head ----------------------------------------
-$scoreHeader =  '; Reverb
-i99     0   '.($TT+$tailT).' 0.9 '
-
-.PHP_EOL.PHP_EOL
-;
 
 // --------------------------- main p1-px fields -------------------------------
-// start time
 function p2() {
 Global $TT;
 return round(stats_rand_gen_funiform(1,$TT),1);
 }
 
-// duration
 $TDur = 1;
 function idur() {
 Global $TDur;
@@ -88,17 +86,16 @@ $TDur = round(stats_rand_gen_funiform(0.1,60),1);
 return $TDur;
 }
 
-// amplitude
 function iamp() {
-return stats_rand_gen_iuniform(-42,0);
+return stats_rand_gen_iuniform(-36,6);
 // return -1;
 }
 
 function ifreq() {
 
-// if(rand(0,1)) { return 1; } else { return -1; } 
+if(rand(0,1)) { return 1; } else { return -1; } 
 
-return round(stats_rand_gen_funiform(.5,2.5),3); 
+//return round(stats_rand_gen_funiform(.5,1.5),3); 
 
 // return 1;
 }

@@ -27,14 +27,14 @@ irel            = p7
 ipanStart       = p8
 ipanEnd         = p9
 iskiptime       = p10
-irevSend        = p11/8
+irevSend        = p11/20
 
 kpan    linseg  ipanStart, idur, ipanEnd
 aAmpEnv linseg  0, iat,  iamp, irel, 0
 
 aLFO     lfo 990, 5, 0 ;  itype
 
-aIn  diskin2 "../WAV/storm3.wav", ifreq, iskiptime, 1
+aIn  diskin2 "../WAV/rhein3M.wav", ifreq, iskiptime, 1
 
 aLeft  = aIn * kpan       * aAmpEnv
 aRight = aIn * (1 - kpan) * aAmpEnv 
@@ -58,11 +58,11 @@ endin
 
 
 // --------------------- init vars ---------------------------------------------
-$tailT   = 30;
+$tailT   = 60;
 $startT  = 60*0;
-$endT    = 60*5+03;
+$endT    = 60*4+52;
 $TT      = 60*60*1-$tailT;
-$Events  = intval($TT*1);         // events  per second
+$Events  = intval($TT*0.5);         // events  per second
 // --------------------------- sco head ----------------------------------------
 $scoreHeader =  '; Reverb
 i99     0   '.($TT+$tailT).' 0.9 '
@@ -96,9 +96,9 @@ return stats_rand_gen_iuniform(-42,0);
 
 function ifreq() {
 
-// if(rand(0,1)) { return 1; } else { return -1; } 
+if(rand(0,1)) { return 1; } else { return -1; } 
 
-return round(stats_rand_gen_funiform(.5,2.5),3); 
+//return round(stats_rand_gen_funiform(.5,2.5),3); 
 
 // return 1;
 }

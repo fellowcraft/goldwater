@@ -27,28 +27,34 @@ irel            = p7
 ipanStart       = p8
 ipanEnd         = p9
 iskiptime       = p10
-irevSend        = p11/8
+irevSend        = p11/1
 
 kpan    linseg  ipanStart, idur, ipanEnd
 aAmpEnv linseg  0, iat,  iamp, irel, 0
+kFilEnv linseg  0, iat,  sr/2, irel, 0
 
 aLFO     lfo 990, 5, 0 ;  itype
 
-aIn  diskin2 "../WAV/storm3.wav", ifreq, iskiptime, 1
+aIn  diskin2 "../WAV/Bell4cM.wav", ifreq, iskiptime, 1
 
-aLeft  = aIn * kpan       * aAmpEnv
-aRight = aIn * (1 - kpan) * aAmpEnv 
+aInFilt = aIn * aAmpEnv
+; aInFilt lowpass2 aIn, kFilEnv, 100
+
+aLeft  = aInFilt * kpan       ; * aAmpEnv
+aRight = aInFilt * (1 - kpan) ;  * aAmpEnv 
 
 outs aLeft, aRight 
 
-galeft    =         galeft  +  aIn * kpan       * irevSend
-garight   =         garight +  aIn * (1 - kpan) * irevSend
+galeft    =         galeft  +  aInFilt * kpan       * irevSend
+garight   =         garight +  aInFilt * (1 - kpan) * irevSend
 endin
 
 instr 99                           ; global reverb ----------------------------
 irvbtime    =        p4
-aleft,  aright  reverbsc  galeft,  garight, irvbtime, 18000, sr, 0.8, 1 
-aright, aleft   reverbsc  garight, galeft,  irvbtime, 18000, sr, 0.8, 1 
+
+aleft,  aright  freeverb  galeft,  garight, irvbtime, 0.1, sr, 0 
+; aright, aleft   reverbsc  garight, galeft,  irvbtime, 18000, sr, 0.8, 1 
+
 outs   aright,   aleft              
 galeft    =    0
 garight   =    0 
@@ -58,11 +64,11 @@ endin
 
 
 // --------------------- init vars ---------------------------------------------
-$tailT   = 30;
+$tailT   = 60;
 $startT  = 60*0;
-$endT    = 60*5+03;
+$endT    = 60*1+40;
 $TT      = 60*60*1-$tailT;
-$Events  = intval($TT*1);         // events  per second
+$Events  = intval($TT*0.5);         // events  per second
 // --------------------------- sco head ----------------------------------------
 $scoreHeader =  '; Reverb
 i99     0   '.($TT+$tailT).' 0.9 '
@@ -83,14 +89,14 @@ function idur() {
 Global $TDur;
 //$TDur = round(14.4-stats_rand_gen_beta(5,1)*14,1);
 
-$TDur = round(stats_rand_gen_funiform(0.1,60),1); 
+$TDur = round(stats_rand_gen_funiform(5,30),2); 
 
 return $TDur;
 }
 
 // amplitude
 function iamp() {
-return stats_rand_gen_iuniform(-42,0);
+return stats_rand_gen_iuniform(-34,2);
 // return -1;
 }
 
@@ -98,7 +104,7 @@ function ifreq() {
 
 // if(rand(0,1)) { return 1; } else { return -1; } 
 
-return round(stats_rand_gen_funiform(.5,2.5),3); 
+return round(stats_rand_gen_funiform(.12,0.20),3); 
 
 // return 1;
 }
@@ -108,7 +114,7 @@ $rndat = 1;
 function iat() {
 Global $TDur;
 Global $rndat;
-$rndat = stats_rand_gen_funiform(0.01,$TDur);
+$rndat = stats_rand_gen_funiform(0.1,$TDur);
 
 return round($rndat,2);
 }
