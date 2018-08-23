@@ -18,7 +18,7 @@ irel            = p7
 ipanStart       = p8
 ipanEnd         = p9
 iskiptime       = p10
-irevSend        = p11/20
+irevSend        = p11/8
 
 kpan    linseg  ipanStart, idur, ipanEnd
 aAmpEnv linseg  0, iat,  iamp, irel, 0
@@ -39,7 +39,7 @@ endin
 instr 99                           ; global reverb ----------------------------
 irvbtime    =        p4
 aleft,  aright  reverbsc  galeft,  garight, irvbtime, 18000, sr, 0.8, 1 
-aright, aleft   reverbsc  garight, galeft,  irvbtime, 18000, sr, 0.8, 1 
+; aright, aleft   reverbsc  garight, galeft,  irvbtime, 18000, sr, 0.8, 1 
 outs   aright,   aleft              
 galeft    =    0
 garight   =    0 
